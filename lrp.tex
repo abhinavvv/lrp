@@ -77,11 +77,19 @@
 	\subsection{Choosing a root point}
 	It was always said that we would choose a root point in such a way that $f(\tilde{x}) = 0$ but the ways to satisfy that condition was never explained and this section shall discuss that.
 	\subsubsection{Unconstrained input space}
-	This is the simple and ideal scenario where the input belongs to any real value $X = R^d$. In this case, we can choose the root point $\{ \tilde{x}_i\}^{(j)}$ that is closest in terms of euclidean distance to $\{x_i\}$. Therefore for a positive relevance say $R_j$ the root point in such cases would be intersection of $f(\tilde{x_i}) = 0$ and vector of maximum descent(search direction) is given by $\tilde{x_i}^{(j)} = \{x_i\} + t.w_j$.
+	This is the simple and ideal scenario where the input belongs to any real value $X = R^d$. In this case, we can choose the root point $\{ \tilde{x}_i\}^{(j)}$ that is closest in terms of euclidean distance to $\{x_i\}$. Therefore for a positive relevance say $R_j$ the root point in such cases would be intersection of $f(\tilde{x_i}) = 0$ and vector of maximum descent(search direction) is given by $\tilde{x_i}^{(j)} = \{x_i\} + t.\textbf{w}_j$. $\textbf{w}_j$ is the weight parameter connecting the neuron $x_j$.
 	\begin{align}
+	    \text{Search direction is defined as,} \nonumber \\ \label{search}
+		\tilde{x_i}^{(j)} &= \{x_i\} + t.\textbf{w}_j  \\
 		\text{According to root point definiton,} & \nonumber \\
 		f(\tilde{x_i}) &= 0   \nonumber \\
-		\sum_{i} \tilde{x_i}^{(j)}.w_{ij} + b_j &= 0 \nonumber \\
+		\sum_{i} \tilde{x_i}^{(j)}.w_{ij} + b_j &= 0  \label{rt_pt} \\
+		\text{Substituting eq (\ref{search}) in  (\ref{rt_pt})} & \nonumber \\
+		t = \frac{-1}{\sum_{i} w_{ij}^{2}} . \sum_{i} w_{ij} +b_{j} \nonumber \\
+		\text{Injecting it back to eq (\ref{search})} \nonumber \\
+		\{\tilde{x_i} \}^{(j)} = \{x_i -  \frac{w_{ij}}{\sum_{i} w_{ij}^{2}} . \sum_{i} w_{ij} +b_{j}  \}  \\
+		\text{Therefore, }& \nonumber \\
+		R_i = \sum_j (\frac{w_{ij}^{2}}{\sum_{i'} w_{i'j}^2}) R_j 		
 	\end{align}
 	\subsubsection{Constrained input space}
 	When the input domain is restricted, then we search in the feature space that provide an unconstrained input space and apply relevance propagation on those.
