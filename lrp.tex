@@ -57,7 +57,7 @@
 		&= \sum_{j} 
 		\frac{\delta R_j}{\delta \{x_i\}}
 		\rvert_{\{\tilde{x_i}^{(j)}\}}
-		. (\{x_i\} - \{ \tilde{x_i}\}^{(j)})
+		. (\{x_i\} - \{ \tilde{x_i}\}^{(j)}) \label{relavance}
 	\end{align}
 	We can see that there are two features to be noted from the above equations:
 	\begin{itemize}
@@ -80,21 +80,39 @@
 	This is the simple and ideal scenario where the input belongs to any real value $X = R^d$. In this case, we can choose the root point $\{ \tilde{x}_i\}^{(j)}$ that is closest in terms of euclidean distance to $\{x_i\}$. Therefore for a positive relevance say $R_j$ the root point in such cases would be intersection of $f(\tilde{x_i}) = 0$ and vector of maximum descent(search direction) is given by $\tilde{x_i}^{(j)} = \{x_i\} + t.\textbf{w}_j$. $\textbf{w}_j$ is the weight parameter connecting the neuron $x_j$.
 	\begin{align}
 	    \text{Search direction is defined as,} \nonumber \\ \label{search}
-		\tilde{x_i}^{(j)} &= \{x_i\} + t.\textbf{w}_j  \\
-		\text{According to root point definiton,} & \nonumber \\
-		f(\tilde{x_i}) &= 0   \nonumber \\
-		\sum_{i} \tilde{x_i}^{(j)}.w_{ij} + b_j &= 0  \label{rt_pt} \\
-		\text{Substituting eq (\ref{search}) in  (\ref{rt_pt})} & \nonumber \\
+		\tilde{x_i}^{(j)} = \{x_i\} + t.\textbf{w}_j  \\
+		\text{According to root point definiton,}  \nonumber \\
+		f(\tilde{x_i}) = 0   \nonumber \\
+		\sum_{i} \tilde{x_i}^{(j)}.w_{ij} + b_j = 0  \label{rt_pt} \\
+		\text{Substituting eq (\ref{search}) in  (\ref{rt_pt})}  \nonumber \\
 		t = \frac{-1}{\sum_{i} w_{ij}^{2}} . \sum_{i} w_{ij} +b_{j} \nonumber \\
 		\text{Injecting it back to eq (\ref{search})} \nonumber \\
-		\{\tilde{x_i} \}^{(j)} = \{x_i -  \frac{w_{ij}}{\sum_{i} w_{ij}^{2}} . \sum_{i} w_{ij} +b_{j}  \}  \\
-		\text{Therefore, }& \nonumber \\
-		R_i = \sum_j (\frac{w_{ij}^{2}}{\sum_{i'} w_{i'j}^2}) R_j 		
+		\{\tilde{x_i} \}^{(j)} = \{x_i -  \frac{w_{ij}}{\sum_{i} w_{ij}^{2}} . \sum_{i} w_{ij} +b_{j}  \} \label{rp_val} \\ 
+		\text{Therefore substituting (\ref{rp_val}) in equation (\ref{relavance}) and simplifying it,  } \nonumber \\
+		R_i = \sum_j (\frac{w_{ij}^{2}}{\sum_{i'} w_{i'j}^2}) R_j  \\
+		\textbf{This is the redistributed relevance} \nonumber		
 	\end{align}
 	\subsubsection{Constrained input space}
-	When the input domain is restricted, then we search in the feature space that provide an unconstrained input space and apply relevance propagation on those.
+	When the input domain $X \subset R^d$ then the nearest root might not be in the same set, hence we restrict our search space according to our feature space domain. Multiple cases of such a setting are explained below.
+	\subsubsection*{Application of Rectified Linear Units}
+	For ReLU, the search domain is restricted to only the positive part of $w_{ij}$ and hence the redistributed relevance is given by:
+	\begin{align}
+		R_i = \sum_{j} \frac{z_{ij}^{+}}{\sum_{i'}z_{i'j}^{+}} R_j
+		%\
+	\end{align}
+	where $z_{ij}^{+} = x_iw_{ij}^{+}$ and $w_{ij}^{+}$ denotes positive part of $w_{ij}$.
+	\subsubsection*{Application for Images as inputs}
+	Similarly in the case of image classification tasks, we would consider only those feature spaces that fall under the domain of admissible pixel values in each dimension. The input space can be written as,
+	\begin{align}
+		B = \{ \{ x_i\}: \forall_{i=1}^{d} l_i \leq x_i \leq h_i \} \nonumber 
+	\end{align}
+	where the input has \textit{d} dimensions and $l_i \leq 0$ \& $h_i \geq 0$ are the smallest and largest admissible pixel for each dimension. Then, the redistributed relevance is: 
 	
+	\begin{align}
+		R_i = \sum_j \frac{z_{ij} - l_i w_{ij}^{+} - h_i w_{ij}^{-} }{\sum_{i'}z_{i'j} - l_i w_{i'j}^{+} - h_i w_{i'j}^{-} }
+	\end{align}
 	
+
 	
 	
 
